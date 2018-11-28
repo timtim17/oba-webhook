@@ -25,9 +25,10 @@ def webhook():
         res = bus(req)
     else:
         log.error('Unexpected action %s' % action)
+        res = 'Unexpected action %s' % action
     
     print('Action: %s' % action)
-    print('Respone: %s' % res)
+    print('Response: %s' % res)
 
     return make_response(jsonify({'fulfillmentText': res}))
 
@@ -39,4 +40,4 @@ def bus(req):
     return api._call_func("stops-for-location", {lat: 47.653435,lon: -122.305641})
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=61294, ssl_context='adhoc')
+    app.run(debug=True, host='0.0.0.0', port=61294)
