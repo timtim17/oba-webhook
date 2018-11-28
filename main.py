@@ -11,23 +11,25 @@ app = Flask(__name__)
 log = app.logger
 api = OBAAPIConnection(__OBA_KEY)
 
+_INTENT_BUS = "projects/assistant-kcmetro/agent/intents/3ca947d8-88c2-492c-ab84-1a2fd3b44c25"
+
 @app.route('/', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
     try:
-        action = req.get('queryResult').get('action')
+        intent = req.get('queryResult').get('intent').get('name')
     except AttributeError:
         return 'json error'
 
     print(json.dumps(req, indent=4))
     
-    if action == 'bus':
+    if intent == _INTENT_BUS:
         res = bus(req)
     else:
-        log.error('Unexpected action %s' % action)
-        res = 'Unexpected action %s' % action
+        log.error('Unexpected action %s' % intent)
+        res = 'Unexpected action %s' % req['queryResult']['intent']['displayName']
     
-    print('Action: %s' % action)
+    print('Intent: %s' % intent)
     print('Response: %s' % res)
 
     return make_response(jsonify({'fulfillmentText': res}))
