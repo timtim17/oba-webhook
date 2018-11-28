@@ -39,7 +39,7 @@ def bus(req):
     print("Dialogflow Parameters:")
     print(json.dumps(parameters, indent=4))
 
-    return api._call_func("stops-for-location", {lat: 47.653435,lon: -122.305641})
+    return api._call_func("stops-for-location", {"lat": 47.653435, "lon": -122.305641})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=61294)
