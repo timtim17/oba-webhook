@@ -10,9 +10,9 @@ class OBAAPIConnection:
     def _call_func(self, func, params):
         param_str = ""
         for key in params.keys():
-            paramStr += "&%s=%s" % (key, params[key])
+            param_str += "&%s=%s" % (key, params[key])
         
-        path = _OBA_PREFIX + func + ".json?key=" + self.apiKey + paramStr
+        path = _OBA_PREFIX + func + ".json?key=" + self.apiKey + param_str
         print("API Request: %s" % path)
 
         return requests.get(_OBA_URL + path).json()
