@@ -99,7 +99,7 @@ def nearby_stops(location):
         }
 
 def stop_info(req):
-    stop_name = req['originalDetectIntentRequest']['payload']['inputs']['arguments'][0]['query']
+    stop_name = req['originalDetectIntentRequest']['payload']['inputs'][0]['arguments'][0]['query']
     return {'payload': {
         'google': {
             'expectUserResponse': False,
