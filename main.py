@@ -44,7 +44,7 @@ def bus(req):
     return api._call_func("stops-for-location", {"lat": 47.653435, "lon": -122.305641})
 
 def nearby_stops(req):
-    return req['originalDetectIntentRequest']['payload']['device']['location']
+    return "%s" % req['originalDetectIntentRequest']['payload']['device']['location']
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=61294)
