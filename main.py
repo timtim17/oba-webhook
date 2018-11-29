@@ -66,7 +66,7 @@ def bus(location, req):
                     for time in schedule:
                         stop_id = time['stopId']
                         if stop_id in stops:
-                            trip_schedules[i] = (time['arrivalTime'], trip_schedules[i], datetime.fromtimestamp(float(trip_schedules[i]['serviceDate'] + time['arrivalTime'] * 1000) / 1000).strftime('%B, %-d at %-I:%M %p'), [x['name'] for x in api_res['data']['list'] if x['id'] == stop_id][0])
+                            trip_schedules[i] = (time['arrivalTime'], trip_schedules[i], datetime.fromtimestamp(float(trip_schedules[i]['serviceDate'] + time['arrivalTime'] * 1000) / 1000).strftime('%B %-d at %-I:%M %p'), [x['name'] for x in api_res['data']['list'] if x['id'] == stop_id][0])
                             break
                 trip_tup = sorted(trip_schedules, key=lambda t: t[0])[0]
                 trip_id = trip_tup[1]['tripId']
@@ -86,7 +86,7 @@ def bus(location, req):
                                     },
                                     {
                                         "tableCard": {
-                                            'rows': [{"cells": [{"text": t[2]}, {"text": t[3]}]} for t in trip_schedules]
+                                            'rows': [{"cells": [{"text": t[2]}, {"text": t[3]}]} for t in trip_schedules[1:]]
                                         }
                                     }
                                 ]
