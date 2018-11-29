@@ -102,7 +102,7 @@ def stop_info(req):
     stop_name = req['originalDetectIntentRequest']['payload']['inputs'][0]['arguments'][0]['textValue']
     return {'payload': {
         'google': {
-            'expectUserResponse': False,
+            'expectUserResponse': True,
             'richResponse': {
                 'items': [
                     {
