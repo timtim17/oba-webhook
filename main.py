@@ -1,4 +1,3 @@
-import json
 import urllib
 
 from datetime import datetime
@@ -16,6 +15,7 @@ _INTENT_BUS = "projects/assistant-kcmetro/agent/intents/3ca947d8-88c2-492c-ab84-
 _INTENT_NEARBY_STOPS = "projects/assistant-kcmetro/agent/intents/dffdd136-07f8-4ba7-afd4-6ebf7a806d39"
 _INTENT_NEARBY_ROUTES = "projects/assistant-kcmetro/agent/intents/3ccaba9f-29eb-4038-bf62-f67943a47f7a"
 _INTENT_STOP_INFO = "projects/assistant-kcmetro/agent/intents/bb1090db-7242-4e0b-8ae1-2b39681d4acb"
+
 
 @app.route('/', methods=['POST'])
 def webhook():
@@ -68,12 +68,12 @@ def bus(location, req):
                         if stop_id in stops:
                             trip_schedules[i] = (time['arrivalTime'], trip_schedules[i], datetime.fromtimestamp(float(trip_schedules[i]['serviceDate'] + time['arrivalTime'] * 1000) / 1000).strftime('%B, %-d at %-I:%M %p'), stop_id)
                             break
-                trip_tup = trip_schedules.sort(key=lambda t: t[0])[0]
+                trip_tup = sorted(trip_schedules, key=lambda t: t[0])[0]
                 trip_time = trip_tup[2]
                 trip_id = trip_tup[1]['tripId']
                 trip_desc = [x for x in trip_objects if x['id'] == trip_id][0]['tripHeadsign']
-                stop = [x['name'] for x in api_res['data']['references']['stops'] if x['id'] == trip_tup[4]][0]
-                return {'fulfillmentText': "Route %s will arrive at %s on %s" % (route, stop, trip_time)}
+                stop = [x['name'] for x in api_res['data']['list'] if x['id'] == trip_tup[3]][0]
+                return {'fulfillmentText': "Route %s - %s will arrive at %s on %s" % (route, trip_desc, stop, trip_time)}
     return {'fulfillmentText': 'Sorry, it doesn\'t appear that that route is in operation near you right now.'}
 
 def nearby_stops(location):
