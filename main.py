@@ -61,7 +61,7 @@ def nearby_routes(location):
     if len(routes) == 0:
         return "Sorry, there seems to be no routes running near you right now."
     else:
-        return "The nearest routes right now near you are " + _list_to_str([(r['shortName'] + ": " + r['description']) for r in routes])
+        return "The nearest routes right now near you are " + _list_to_str([(r['shortName'] + ": " + r['description']) for r in routes if r['agencyId'] != 98])
 
 def _list_to_str(l):
     """
