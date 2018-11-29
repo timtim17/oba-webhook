@@ -22,17 +22,12 @@ def webhook():
         return 'unset api key'
 
     req = request.get_json(silent=True, force=True)
-    try:
-        intent = req.get('queryResult').get('intent').get('name')
-    except AttributeError:
-        return 'json error'
-
     print(req)
-
+    intent = req['queryResult']['intent']['name']
     location = req['originalDetectIntentRequest']['payload']['device']['location']['coordinates']
     
     if intent == _INTENT_BUS:
-        res = bus(location)
+        res = bus(location, req)
     elif intent == _INTENT_NEARBY_STOPS:
         res = nearby_stops(location)
     elif intent == _INTENT_NEARBY_ROUTES:
@@ -48,8 +43,11 @@ def webhook():
 
     return make_response(jsonify(res))
 
-def bus(location):
-    return "nothing"
+def bus(location, req):
+    route = req['queryResult']['parameters']['bus_route']
+    direction = req['queryResult']['parameters']['direction']
+    routes = api.nearby_routes(location)
+    return "%s" % [x for x in routes if x['shortName'] == route][0]
 
 def nearby_stops(location):
     api_res = api.nearby_stops(location)
