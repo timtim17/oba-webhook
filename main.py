@@ -1,4 +1,5 @@
 import json
+import urllib
 
 from flask import Flask, request, make_response, jsonify
 from os import getenv
@@ -98,7 +99,37 @@ def nearby_stops(location):
         }
 
 def stop_info(req):
-    return {'fulfillmentText': 'hi'}
+    stop_name = req['originalDetectIntentRequest']['payload']['inputs']['arguments'][0]['query']
+    return {'payload': {
+        'google': {
+            'expectUserResponse': False,
+            'richResponse': {
+                'items': [
+                    {
+                        'simpleResponse': {
+                            'textToSpeech': "Here's some more information about %s" % stop_name,
+                            'displayText': "Okay, %s" % stopName
+                        }
+                    },
+                    {
+                        'basicCard': {
+                            "title": stop_name,
+                            "formattedText": "%s is a bus stop." % stop_name,
+                            "buttons": [
+                                {
+                                    "title": "Open in Maps",
+                                    "openUrlAction": {
+                                        "url": "https://www.google.com/maps/search/?api=1&%s" % urllib.parse.urlencode({"query": stop_name})
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+                }
+            }
+        }
+    }}
 
 def nearby_routes(location):
     api_res = api.nearby_routes(location)
