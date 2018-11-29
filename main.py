@@ -59,8 +59,8 @@ def bus(location, req):
         if len(stops) > 0:
             trips = api.trips_for_route(route_id, include_schedule=True)
             trip_objects = [x for x in trips['data']['references']['trips'] if x['directionId'] == direction and x['routeId'] == route_id]
-            if len(trip_objects) > 0:
-                trip_schedules = [x for x in trips['data']['list'] if x['tripId'] in [y['id'] for y in trip_objects]]
+            trip_schedules = [x for x in trips['data']['list'] if x['tripId'] in [y['id'] for y in trip_objects]]
+            if len(trip_schedules) > 0:
                 for i in range(len(trip_schedules)):
                     schedule = trip_schedules[i]['schedule']['stopTimes']
                     for time in schedule:
