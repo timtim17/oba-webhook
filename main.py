@@ -11,6 +11,7 @@ log = app.logger
 api = OBAAPIConnection(__OBA_KEY)
 
 _INTENT_BUS = "projects/assistant-kcmetro/agent/intents/3ca947d8-88c2-492c-ab84-1a2fd3b44c25"
+_INTENT_NEARBY_STOP = "projects/assistant-kcmetro/agent/intents/dffdd136-07f8-4ba7-afd4-6ebf7a806d39"
 
 @app.route('/', methods=['POST'])
 def webhook():
@@ -27,6 +28,8 @@ def webhook():
     
     if intent == _INTENT_BUS:
         res = bus(req)
+    elif intent == _INTENT_NEARBY_STOPS:
+        res = nearby_stops(req)
     else:
         log.error('Unexpected action %s' % intent)
         res = 'Unexpected action %s' % req['queryResult']['intent']['displayName']
@@ -38,10 +41,10 @@ def webhook():
 
 def bus(req):
     parameters = req['queryResult']['parameters']
-    print("Dialogflow Parameters:")
-    print(json.dumps(parameters, indent=4))
-
     return api._call_func("stops-for-location", {"lat": 47.653435, "lon": -122.305641})
+
+def nearby_stops(req):
+    return req['queryResult']['location']
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=61294)
