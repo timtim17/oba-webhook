@@ -57,7 +57,7 @@ def nearby_stops(location):
     if num_stops == 0:
         return "Sorry, there seems to be no bus stops nearby."
     else:
-        res_string = stops[0]['name']
+        res_string = "The nearest bus stops are " + stops[0]['name']
         for i in range(1, num_stops - 1):
             res_string += ", " + stops[i]['name']
         return res_string + ", and " + stops[num_stops - 1]['name']
