@@ -62,7 +62,7 @@ def nearby_routes(location):
         return {'fulfillmentText': "Sorry, there seems to be no routes running near you right now."}
     else:
         routes_as_str = [((r['shortName'] + ": " + r['description']) if r['description'] else r['longName']) for r in routes if r['description']]
-        resp_text = "The nearest routes right now are " + _list_to_str(routes_as_str)
+        resp_text = "The nearest routes right now are " + _list_to_str(routes_as_str if (len(routes_as_str) <= 5) else routes_as_str[:5])
         return {
             'fulfillmentText': resp_text,
             'payload': {
@@ -77,8 +77,10 @@ def nearby_routes(location):
                                 }
                             },
                             {
-                                "basicCard": {
-                                    'formattedText': "\n".join([('- ' + r) for r in routes_as_str])
+                                "tableCard": {
+                                    'rows': [{"cells": 
+                                        ([{"text": r['shortName']}, {"text": r['description']}]) if r['description'] else [{"text": r['longName']}]
+                                    } for r in routes]
                                 }
                             }
                         ]
