@@ -108,7 +108,7 @@ def stop_info(req):
                     {
                         'simpleResponse': {
                             'textToSpeech': "Here's some more information about %s" % stop_name,
-                            'displayText': "Okay, %s" % stopName
+                            'displayText': "Okay, %s" % stop_name
                         }
                     },
                     {
