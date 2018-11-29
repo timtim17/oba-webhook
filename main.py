@@ -53,14 +53,31 @@ def bus(location):
 def nearby_stops(location):
     api_res = api.nearby_stops(location)
     stops = api_res['data']['list']
-    num_stops = len(stops)
-    if num_stops == 0:
+    if len(stops) == 0:
         return "Sorry, there seems to be no bus stops nearby."
     else:
-        res_string = "The nearest bus stops are " + stops[0]['name']
-        for i in range(1, num_stops - 1):
-            res_string += ", " + stops[i]['name']
-        return res_string + ", and " + stops[num_stops - 1]['name']
+        return "The nearest bus stops are " + _list_to_str([s['name'] for s in stops])
+
+def nearby_routes(location):
+    api_res = api.nearby_routes(location)
+    routes = api_res['references']['routes']
+    if len(routes) == 0:
+        return "Sorry, there seems to be no routes running near you right now."
+    else:
+        return "The nearest routes right now near you are " + _list_to_str([(r['shortName'] + ": " + r['description']) for r in routes])
+
+def _list_to_str(l):
+    """
+    Converts a list to a string in the format "list item 1, list item 2, ..., and list item n".
+    Precondition: list expected to have length >= 1
+    """
+    res_string = l[0]
+    list_size = len(l)
+    if list_size > 1:
+        for i in range(1, list_size - 1):
+            res_string += ", " + l[i]
+        res_string += ", and " + l[list_size - 1]
+    return res_string
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=61294)

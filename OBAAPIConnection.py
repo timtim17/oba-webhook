@@ -7,7 +7,7 @@ _OBA_FUNCTIONS = {
     "stops_for_location": "stops-for-location",
     "routes_for_stop": "arrivals-and-departures-for-stop",
     "route": "route",
-    "routes_for_location": "routes-for-location"
+    "routes_for_location": "trips-for-location"
 }
 
 class OBAAPIConnection:
@@ -27,8 +27,11 @@ class OBAAPIConnection:
     def nearby_stops(self, location, max_count=3):
         return self._call_func(_OBA_FUNCTIONS['stops_for_location'], {"lat": location['latitude'], "lon": location['longitude'], "maxCount": max_count})
     
-    def routes_for_stop(self, stop_id):
-        return None
+    def nearby_routes(self, location, max_count=None):
+        params = {"lat": location['latitude'], "lon": location['longitude']}
+        if max_count:
+            params['maxCount'] = max_count
+        return self._call_func(_OBA_FUNCTIONS['routes_for_location'], params)
     
     def route_time(self, route_id, stop_id):
         return None
