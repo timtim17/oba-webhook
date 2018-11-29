@@ -19,7 +19,7 @@ class OBAAPIConnection:
         for key in params.keys():
             param_str += "&%s=%s" % (key, params[key])
         
-        path = _OBA_PREFIX + func + ".json?key=" + self.apiKey + param_str
+        path = _OBA_PREFIX + func + ".json?key=" + self.apiKey + param_str + "&time=2018-11-29_13-00-00"
         print("API Request: %s" % path)
 
         return requests.get(_OBA_URL + path).json()
