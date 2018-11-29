@@ -66,12 +66,12 @@ def bus(location, req):
                     for time in schedule:
                         stop_id = time['stopId']
                         if stop_id in stops:
-                            trip_schedules[i] = (time['arrivalTime'], trip_schedules[i], datetime.fromtimestamp(float(trip_schedules[i]['serviceDate'] + time['arrivalTime'] * 1000) / 1000).strftime('%B %-d at %-I:%M %p'), [x['name'] for x in api_res['data']['list'] if x['id'] == stop_id][0])
+                            trip_schedules[i] = (time['arrivalTime'], trip_schedules[i], datetime.fromtimestamp(float(trip_schedules[i]['serviceDate'] + time['arrivalTime'] * 1000) / 1000).strftime('%-I:%M %p'), [x['name'] for x in api_res['data']['list'] if x['id'] == stop_id][0])
                             break
                 trip_tup = sorted(trip_schedules, key=lambda t: t[0])[0]
                 trip_id = trip_tup[1]['tripId']
                 trip_desc = [x for x in trip_objects if x['id'] == trip_id][0]['tripHeadsign']
-                resp_text = "Route %s - %s will arrive at %s on %s" % (route, trip_desc, trip_tup[3], trip_tup[2])
+                resp_text = "Route %s - %s will arrive at %s at %s" % (route, trip_desc, trip_tup[3], trip_tup[2])
                 return {'fulfillmentText': resp_text,
                     'payload': {
                         'google': {
