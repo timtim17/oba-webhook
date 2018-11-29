@@ -45,10 +45,9 @@ def webhook():
 
 def bus(location, req):
     route = req['queryResult']['parameters']['bus_route']
-    if route is float:
-        route = str(int(route))
-    else:
-        route = str(route)
+    if type(route) is float:
+        route = int(route) # drop decimal
+    route = str(route)
     direction = req['queryResult']['parameters']['direction']
     routes = api.nearby_routes(location)['data']['references']['routes']
     route_nums = [x['shortName'] for x in routes]
