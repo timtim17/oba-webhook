@@ -1,10 +1,10 @@
 import json
 
 from flask import Flask, request, make_response, jsonify
-from os import environ.getenv as gen_env_var
+from os import getenv
 from OBAAPIConnection import OBAAPIConnection
 
-__OBA_KEY = get_env_var('oba-api-key')
+__OBA_KEY = getenv('oba-api-key')
 
 app = Flask(__name__)
 log = app.logger
