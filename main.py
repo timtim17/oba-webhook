@@ -24,7 +24,7 @@ def webhook():
     except AttributeError:
         return 'json error'
 
-    print(json.dumps(req, indent=4))
+    print(req)
     
     if intent == _INTENT_BUS:
         res = bus(req)
