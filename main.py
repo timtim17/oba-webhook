@@ -44,7 +44,11 @@ def webhook():
     return make_response(jsonify(res))
 
 def bus(location, req):
-    route = str(req['queryResult']['parameters']['bus_route'])
+    route = req['queryResult']['parameters']['bus_route']
+    if route is float:
+        route = str(int(route))
+    else:
+        route = str(route)
     direction = req['queryResult']['parameters']['direction']
     routes = api.nearby_routes(location)['data']['references']['routes']
     route_nums = [x['shortName'] for x in routes]
