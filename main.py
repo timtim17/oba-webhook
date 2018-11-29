@@ -25,11 +25,13 @@ def webhook():
         return 'json error'
 
     print(req)
+
+    location = req['originalDetectIntentRequest']['payload']['device']['location']['coordinates']
     
     if intent == _INTENT_BUS:
-        res = bus(req)
+        res = bus(location)
     elif intent == _INTENT_NEARBY_STOPS:
-        res = nearby_stops(req)
+        res = nearby_stops(location)
     else:
         log.error('Unexpected action %s' % intent)
         res = 'Unexpected action %s' % req['queryResult']['intent']['displayName']
@@ -39,12 +41,11 @@ def webhook():
 
     return make_response(jsonify({'fulfillmentText': res}))
 
-def bus(req):
-    parameters = req['queryResult']['parameters']
-    return api._call_func("stops-for-location", {"lat": 47.653435, "lon": -122.305641})
+def bus(location):
+    return "nothing"
 
-def nearby_stops(req):
-    return "%s" % req['originalDetectIntentRequest']['payload']['device']['location']
+def nearby_stops(location):
+    return "%s" % api.nearby_stops(location)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=61294)

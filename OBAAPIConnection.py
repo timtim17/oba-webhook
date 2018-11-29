@@ -24,8 +24,8 @@ class OBAAPIConnection:
 
         return requests.get(_OBA_URL + path).json()
     
-    def nearest_stop(location):
-        return None
+    def nearby_stops(location):
+        return _call_func(_OBA_FUNCTIONS['stops_for_location'], {"lat": location['latitude'], "lon": location['longitude']})
     
     def routes_for_stop(stop_id):
         return None
