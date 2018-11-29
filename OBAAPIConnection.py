@@ -7,7 +7,8 @@ _OBA_FUNCTIONS = {
     "stops_for_location": "stops-for-location",
     "routes_for_stop": "arrivals-and-departures-for-stop",
     "route": "route",
-    "routes_for_location": "trips-for-location"
+    "routes_for_location": "trips-for-location",
+    "trips_for_route": "trips-for-route"
 }
 
 class OBAAPIConnection:
