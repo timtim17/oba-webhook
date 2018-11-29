@@ -13,6 +13,7 @@ api = OBAAPIConnection(__OBA_KEY)
 _INTENT_BUS = "projects/assistant-kcmetro/agent/intents/3ca947d8-88c2-492c-ab84-1a2fd3b44c25"
 _INTENT_NEARBY_STOPS = "projects/assistant-kcmetro/agent/intents/dffdd136-07f8-4ba7-afd4-6ebf7a806d39"
 _INTENT_NEARBY_ROUTES = "projects/assistant-kcmetro/agent/intents/3ccaba9f-29eb-4038-bf62-f67943a47f7a"
+_INTENT_STOP_INFO = "projects/assistant-kcmetro/agent/intents/bb1090db-7242-4e0b-8ae1-2b39681d4acb"
 
 @app.route('/', methods=['POST'])
 def webhook():
@@ -35,6 +36,8 @@ def webhook():
         res = nearby_stops(location)
     elif intent == _INTENT_NEARBY_ROUTES:
         res = nearby_routes(location)
+    elif intent == _INTENT_STOP_INFO:
+        res = stop_info(req)
     else:
         log.error('Unexpected action %s' % intent)
         res = 'Unexpected action %s' % req['queryResult']['intent']['displayName']
@@ -93,6 +96,9 @@ def nearby_stops(location):
                 }
             }
         }
+
+def stop_info(req):
+    return {'fulfillmentText': 'hi'}
 
 def nearby_routes(location):
     api_res = api.nearby_routes(location)
