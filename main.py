@@ -79,8 +79,8 @@ def nearby_routes(location):
                             {
                                 "tableCard": {
                                     'rows': [{"cells": 
-                                        ([{"text": r['shortName']}, {"text": r['description']}]) if r['description'] else [{"text": r['longName']}]
-                                    } for r in routes]
+                                        ([{"text": r['shortName']}, {"text": r['description']}]) if r['description'] else [{"text": r['longName']}, {"text": ""}]
+                                    } for r in routes if (r['description'] or r['longName'])]
                                 }
                             }
                         ]
