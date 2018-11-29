@@ -63,7 +63,7 @@ def nearby_stops(location):
 
 def nearby_routes(location):
     api_res = api.nearby_routes(location)
-    routes = api_res['references']['routes']
+    routes = api_res['data']['references']['routes']
     if len(routes) == 0:
         return "Sorry, there seems to be no routes running near you right now."
     else:
