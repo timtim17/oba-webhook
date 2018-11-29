@@ -42,7 +42,7 @@ def webhook():
     print('Intent: %s' % intent)
     print('Response: %s' % res)
 
-    return make_response(jsonify({'fulfillmentText': res}))
+    return make_response(jsonify(res))
 
 def bus(location):
     return "nothing"
@@ -51,17 +51,42 @@ def nearby_stops(location):
     api_res = api.nearby_stops(location)
     stops = api_res['data']['list']
     if len(stops) == 0:
-        return "Sorry, there seems to be no bus stops nearby."
+        return {'fulfillmentText': "Sorry, there seems to be no bus stops nearby."}
     else:
-        return "The nearest bus stops are " + _list_to_str([s['name'] for s in stops])
+        return {'fulfillmentText': "The nearest bus stops are " + _list_to_str([s['name'] for s in stops])}
 
 def nearby_routes(location):
     api_res = api.nearby_routes(location)
     routes = api_res['data']['references']['routes']
     if len(routes) == 0:
-        return "Sorry, there seems to be no routes running near you right now."
+        return {'fulfillmentText': "Sorry, there seems to be no routes running near you right now."}
     else:
-        return "The nearest routes right now near you are " + _list_to_str([((r['shortName'] + ": " + r['description']) if r['description'] else r['longName']) for r in routes if r['description'])
+        routes_as_str = [((r['shortName'] + ": " + r['description']) if r['description'] else r['longName']) for r in routes if r['description']
+        resp_text = "The nearest routes right now are "
+                        + _list_to_str(routes_as_str)
+        return {
+            'fulfillmentText': resp_text,
+            'payload': {
+                'google': {
+                    'expectUserResponse': True,
+                    'richResponse': {
+                        'items': [
+                            {
+                                "simpleResponse": {
+                                    'textToSpeech': resp_text,
+                                    'displayText': "Here are the nearest routes:"
+                                }
+                            },
+                            {
+                                "basicCard": {
+                                    'formattedText': "\n".join([('- ' + r) for r in routes_as_str])
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
 
 def _list_to_str(l):
     """
