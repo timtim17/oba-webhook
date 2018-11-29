@@ -26,7 +26,10 @@ def webhook():
 
     print(req)
 
-    location = req['originalDetectIntentRequest']['payload']['device']['location']['coordinates']
+    if req['originalDetectIntentRequest']['payload']['requestType'] == 'SIMULATOR':
+        location = {'latitude': 37.4219806, 'longitude': -122.0841979}  # willow hall dorms, UW -- sample location
+    else:
+        location = req['originalDetectIntentRequest']['payload']['device']['location']['coordinates']
     
     if intent == _INTENT_BUS:
         res = bus(location)
@@ -45,7 +48,16 @@ def bus(location):
     return "nothing"
 
 def nearby_stops(location):
-    return "%s" % api.nearby_stops(location)
+    api_res = api.nearby_stops(location)
+    stops = api_res['data']['list']
+    num_stops = len(stops)
+    if num_stops == 0:
+        return "Sorry, there seems to be no bus stops nearby."
+    else:
+        res_string = stops[0]['name']
+        for i in range(1, num_stops - 1):
+            res_string += ", " + stops[i]['name']
+        return res_string + ", and " + stops[num_stops - 1]['name']
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=61294)
