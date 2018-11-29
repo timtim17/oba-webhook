@@ -46,7 +46,7 @@ def webhook():
 def bus(location, req):
     route = req['queryResult']['parameters']['bus_route']
     direction = req['queryResult']['parameters']['direction']
-    routes = api.nearby_routes(location)
+    routes = api.nearby_routes(location)['data']['references']['routes']
     return "%s" % [x for x in routes if x['shortName'] == route][0]
 
 def nearby_stops(location):
