@@ -1,11 +1,10 @@
 import json
 
 from flask import Flask, request, make_response, jsonify
+from os import environ.getenv as gen_env_var
 from OBAAPIConnection import OBAAPIConnection
 
-# SECRET SECRET SECRET SECRET #
-__OBA_KEY = "TEST"
-#  END SECRET END SECRET END  #
+__OBA_KEY = get_env_var('oba-api-key')
 
 app = Flask(__name__)
 log = app.logger
@@ -15,6 +14,9 @@ _INTENT_BUS = "projects/assistant-kcmetro/agent/intents/3ca947d8-88c2-492c-ab84-
 
 @app.route('/', methods=['POST'])
 def webhook():
+    if not __OBA_KEY:
+        return 'unset api key'
+
     req = request.get_json(silent=True, force=True)
     try:
         intent = req.get('queryResult').get('intent').get('name')
