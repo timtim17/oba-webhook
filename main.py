@@ -53,7 +53,31 @@ def nearby_stops(location):
     if len(stops) == 0:
         return {'fulfillmentText': "Sorry, there seems to be no bus stops nearby."}
     else:
-        return {'fulfillmentText': "The nearest bus stops are " + _list_to_str([s['name'] for s in stops])}
+        stops_as_str = [s['name'] for s in stops]
+        resp_text = "The nearest bus stops are " + _list_to_str(stops_as_str)
+        return {
+            'fulfillmentText': resp_text,
+            'payload': {
+                'google': {
+                    'expectUserResponse': True,
+                    'richResponse': {
+                        'items': [
+                            {
+                                "simpleResponse": {
+                                    'textToSpeech': resp_text,
+                                    'displayText': "Here are the nearest stops:"
+                                }
+                            },
+                            {
+                                "tableCard": {
+                                    'rows': [{"cells": [{"text": s['name']}]} for s in stops]
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
 
 def nearby_routes(location):
     api_res = api.nearby_routes(location)
@@ -79,8 +103,8 @@ def nearby_routes(location):
                             {
                                 "tableCard": {
                                     'rows': [{"cells": 
-                                        ([{"text": r['shortName']}, {"text": r['description']}]) if r['description'] else [{"text": r['longName']}, {"text": ""}]
-                                    } for r in routes if (r['description'] or r['longName'])]
+                                        ([{"text": r['shortName']}, {"text": r['description']}]) if r['description'] else [{"text": r['longName']}, {"text": ""}] if (r['description'] or r['longName'])
+                                    } for r in routes]
                                 }
                             }
                         ]
