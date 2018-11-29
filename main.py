@@ -4,7 +4,7 @@ from flask import Flask, request, make_response, jsonify
 from os import getenv
 from OBAAPIConnection import OBAAPIConnection
 
-__OBA_KEY = getenv('oba-api-key')
+__OBA_KEY = getenv('oba-key')
 
 app = Flask(__name__)
 log = app.logger
