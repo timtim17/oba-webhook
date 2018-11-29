@@ -1,6 +1,7 @@
 import json
 import urllib
 
+from datetime import datetime
 from flask import Flask, request, make_response, jsonify
 from os import getenv
 from OBAAPIConnection import OBAAPIConnection
@@ -49,12 +50,31 @@ def bus(location, req):
         route = int(route) # drop decimal
     route = str(route)
     direction = req['queryResult']['parameters']['direction']
-    routes = api.nearby_routes(location)['data']['references']['routes']
-    route_nums = {x['shortName']: x for x in routes}
-    if route in route_nums.keys():
-        return {'fulfillmentText': "now we'd look up route %s" % route}
-    else:
-        return {'fulfillmentText': 'Sorry, it doesn\'t appear that that route is in operation near you right now.'}
+    direction = 1 if (direction == 'north' or direction == 'east') else 0
+    api_res = api.nearby_stops(location)
+    route_id = [x['routeId'] for x in api_res['data']['references']['routes'] if x['shortName'] == route]
+    if len(route_id) > 0:
+        route_id = route_id[0]
+        trips = api.trips_for_route(route_id, include_schedule=True)
+        stops = [x['id'] for x in api_res['data']['list'] if route_id in x['routeIds']]
+        if len(stops) > 0:
+            trip_objects = [x for x in trips['data']['references']['trips'] if x['directionId'] == direction and x['routeId'] == route_id]
+            if len(trip_objects) > 0:
+                trip_schedules = [x for x in trips['data']['list'] if x['tripId'] in [y['id'] for y in trip_objects]]
+                for i in range(len(trip_schedules)):
+                    schedule = trip_schedules[i]['schedule']['stopTimes']
+                    for time in schedule:
+                        stop_id = time['stopId']
+                        if stop_id in stops:
+                            trip_schedules[i] = (time['arrivalTime'], trip_schedules[i], datetime.fromtimestamp(float(trip_schedules[i]['serviceDate'] + time['arrivalTime'] * 1000) / 1000).strftime('%B, %-d at %-I:%M %p'), stop_id)
+                            break
+                trip_tup = trip_schedules.sort(key=lambda t: t[0])[0]
+                trip_time = trip_tup[2]
+                trip_id = trip_tup[1]['tripId']
+                trip_desc = [x for x in trip_objects if x['id'] == trip_id][0]['tripHeadsign']
+                stop = [x['name'] for x in api_res['data']['references']['stops'] if x['id'] == trip_tup[4]][0]
+                return {'fulfillmentText': "Route %s will arrive at %s on %s" % (route, stop, trip_time)}
+    return {'fulfillmentText': 'Sorry, it doesn\'t appear that that route is in operation near you right now.'}
 
 def nearby_stops(location):
     api_res = api.nearby_stops(location)

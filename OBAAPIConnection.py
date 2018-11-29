@@ -27,6 +27,9 @@ class OBAAPIConnection:
     def nearby_stops(self, location, max_count=5):
         return self._call_func(_OBA_FUNCTIONS['stops_for_location'], {"lat": location['latitude'], "lon": location['longitude'], "maxCount": max_count})
     
+    def trips_for_route(self, route_id, include_status=False, include_schedule=False):
+        return self._call_func(_OBA_FUNCTIONS['trips_for_route'], {'includeStatus': include_status, 'includeSchedule': include_schedule})
+    
     def nearby_routes(self, location, max_count=None, lat_span=0.05, lon_span=0.05):
         params = {"lat": location['latitude'], "lon": location['longitude'], "latSpan": lat_span, "lonSpan": lon_span}
         if max_count:
