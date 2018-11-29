@@ -55,7 +55,7 @@ def bus(location, req):
     if route in route_nums:
         return {'fulfillmentText': "%s;%s" % (route, route_nums)}
     else:
-        return {'fulfillmentText': 'Sorry, it doesn\'t appear that that route is in operation near you right now.'}
+        return {'fulfillmentText': route + 'Sorry, it doesn\'t appear that that route is in operation near you right now.'}
 
 def nearby_stops(location):
     api_res = api.nearby_stops(location)
