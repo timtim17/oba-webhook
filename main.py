@@ -11,7 +11,7 @@ log = app.logger
 api = OBAAPIConnection(__OBA_KEY)
 
 _INTENT_BUS = "projects/assistant-kcmetro/agent/intents/3ca947d8-88c2-492c-ab84-1a2fd3b44c25"
-_INTENT_NEARBY_STOP = "projects/assistant-kcmetro/agent/intents/dffdd136-07f8-4ba7-afd4-6ebf7a806d39"
+_INTENT_NEARBY_STOPS = "projects/assistant-kcmetro/agent/intents/dffdd136-07f8-4ba7-afd4-6ebf7a806d39"
 
 @app.route('/', methods=['POST'])
 def webhook():
