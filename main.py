@@ -47,7 +47,11 @@ def bus(location, req):
     route = str(req['queryResult']['parameters']['bus_route'])
     direction = req['queryResult']['parameters']['direction']
     routes = api.nearby_routes(location)['data']['references']['routes']
-    return {'fulfillmentText': "%s;%s" % (route, [x['shortName'] for x in routes])}
+    route_nums = [x['shortName'] for x in routes]
+    if route in route_nums:
+        return {'fulfillmentText': "%s;%s" % (route, route_nums)}
+    else:
+        return {'fulfillmentText': 'Sorry, it doesn\'t appear that that route is in operation near you right now.'}
 
 def nearby_stops(location):
     api_res = api.nearby_stops(location)
