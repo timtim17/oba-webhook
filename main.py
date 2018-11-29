@@ -66,14 +66,34 @@ def bus(location, req):
                     for time in schedule:
                         stop_id = time['stopId']
                         if stop_id in stops:
-                            trip_schedules[i] = (time['arrivalTime'], trip_schedules[i], datetime.fromtimestamp(float(trip_schedules[i]['serviceDate'] + time['arrivalTime'] * 1000) / 1000).strftime('%B, %-d at %-I:%M %p'), stop_id)
+                            trip_schedules[i] = (time['arrivalTime'], trip_schedules[i], datetime.fromtimestamp(float(trip_schedules[i]['serviceDate'] + time['arrivalTime'] * 1000) / 1000).strftime('%B, %-d at %-I:%M %p'), [x['name'] for x in api_res['data']['list'] if x['id'] == stop_id][0])
                             break
                 trip_tup = sorted(trip_schedules, key=lambda t: t[0])[0]
-                trip_time = trip_tup[2]
                 trip_id = trip_tup[1]['tripId']
                 trip_desc = [x for x in trip_objects if x['id'] == trip_id][0]['tripHeadsign']
-                stop = [x['name'] for x in api_res['data']['list'] if x['id'] == trip_tup[3]][0]
-                return {'fulfillmentText': "Route %s - %s will arrive at %s on %s" % (route, trip_desc, stop, trip_time)}
+                resp_text = "Route %s - %s will arrive at %s on %s" % (route, trip_desc, trip_tup[3], trip_tup[2])
+                return {'fulfillmentText': resp_text,
+                    'payload': {
+                        'google': {
+                            'expectUserResponse': True,
+                            'richResponse': {
+                                'items': [
+                                    {
+                                        "simpleResponse": {
+                                            'textToSpeech': resp_text,
+                                            'displayText': resp_text + ". Here are some other times it will arrive:"
+                                        }
+                                    },
+                                    {
+                                        "tableCard": {
+                                            'rows': [{"cells": [{"text": t[2]}, {"text": t[3]] for t in trip_schedules]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
     return {'fulfillmentText': 'Sorry, it doesn\'t appear that that route is in operation near you right now.'}
 
 def nearby_stops(location):
