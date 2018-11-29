@@ -47,7 +47,7 @@ def bus(location, req):
     route = str(req['queryResult']['parameters']['bus_route'])
     direction = req['queryResult']['parameters']['direction']
     routes = api.nearby_routes(location)['data']['references']['routes']
-    return "%s" % ([x for x in routes if x['shortName'] == route][0])
+    return "%s" % ([x for x in routes])
 
 def nearby_stops(location):
     api_res = api.nearby_stops(location)
