@@ -26,10 +26,13 @@ def webhook():
 
     print(req)
 
-    if req['originalDetectIntentRequest']['payload']['requestType'] == 'SIMULATOR':
-        location = {'latitude': 37.4219806, 'longitude': -122.0841979}  # willow hall dorms, UW -- sample location
-    else:
-        location = req['originalDetectIntentRequest']['payload']['device']['location']['coordinates']
+    location = req['originalDetectIntentRequest']['payload']['device']['location']['coordinates']
+    try:
+        req_type = req['originalDetectIntentRequest']['payload']['requestType']
+        if req_type == 'SIMULATOR':
+            location = {'latitude': 37.4219806, 'longitude': -122.0841979}  # willow hall dorms, UW -- sample location
+    except KeyError:
+        pass
     
     if intent == _INTENT_BUS:
         res = bus(location)
