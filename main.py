@@ -50,14 +50,14 @@ def bus(location, req):
         route = int(route) # drop decimal
     route = str(route)
     direction = req['queryResult']['parameters']['direction']
-    direction = 1 if (direction == 'north' or direction == 'east') else 0
+    direction = "1" if (direction == 'north' or direction == 'east') else "0"
     api_res = api.nearby_stops(location)
     route_id = [x['id'] for x in api_res['data']['references']['routes'] if x['shortName'] == route]
     if len(route_id) > 0:
         route_id = route_id[0]
-        trips = api.trips_for_route(route_id, include_schedule=True)
         stops = [x['id'] for x in api_res['data']['list'] if route_id in x['routeIds']]
         if len(stops) > 0:
+            trips = api.trips_for_route(route_id, include_schedule=True)
             trip_objects = [x for x in trips['data']['references']['trips'] if x['directionId'] == direction and x['routeId'] == route_id]
             if len(trip_objects) > 0:
                 trip_schedules = [x for x in trips['data']['list'] if x['tripId'] in [y['id'] for y in trip_objects]]
