@@ -65,15 +65,30 @@ def nearby_stops(location):
                             {
                                 "simpleResponse": {
                                     'textToSpeech': resp_text,
-                                    'displayText': "Here are the nearest stops:"
+                                    'displayText': "Here are the nearest stops, tap one to find out more about it:"
                                 }
-                            },
-                            {
-                                "tableCard": {
-                                    'rows': [{"cells": [{"text": s['name']}]} for s in stops]
-                                }
-                            }
+                            }# ,
+                            # {
+                            #     "tableCard": {
+                            #         'rows': [{"cells": [{"text": s['name']}]} for s in stops]
+                            #     }
+                            # }
                         ]
+                    },
+                    'systemIntent': {
+                        'intent': 'actions.intent.OPTION',
+                        "inputValueData": {
+                            "@type": "type.googleapis.com/google.actions.v2.OptionValueSpec",
+                            "listSelect": {
+                                "title": "Bus Stops",
+                                "items": [{
+                                    "optionInfo": {
+                                        "key": s['name']
+                                    },
+                                    "title": s['name']
+                                } for s in stops]
+                            }
+                        }
                     }
                 }
             }
