@@ -86,7 +86,7 @@ def bus(location, req):
                                     },
                                     {
                                         "tableCard": {
-                                            'rows': [{"cells": [{"text": t[2]}, {"text": t[3]] for t in trip_schedules]
+                                            'rows': [{"cells": [{"text": t[2]}, {"text": t[3]}]} for t in trip_schedules]
                                         }
                                     }
                                 ]
