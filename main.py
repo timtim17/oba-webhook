@@ -52,7 +52,7 @@ def bus(location, req):
     direction = req['queryResult']['parameters']['direction']
     direction = 1 if (direction == 'north' or direction == 'east') else 0
     api_res = api.nearby_stops(location)
-    route_id = [x['routeId'] for x in api_res['data']['references']['routes'] if x['shortName'] == route]
+    route_id = [x['id'] for x in api_res['data']['references']['routes'] if x['shortName'] == route]
     if len(route_id) > 0:
         route_id = route_id[0]
         trips = api.trips_for_route(route_id, include_schedule=True)
