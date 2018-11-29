@@ -30,7 +30,7 @@ def webhook():
     try:
         req_type = req['originalDetectIntentRequest']['payload']['requestType']
         if req_type == 'SIMULATOR':
-            location = {'latitude': 37.4219806, 'longitude': -122.0841979}  # willow hall dorms, UW -- sample location
+            location = {'latitude': 47.6595, 'longitude': -122.3045}  # willow hall dorms, UW -- sample location
     except KeyError:
         pass
     
