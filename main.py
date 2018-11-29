@@ -128,7 +128,7 @@ def stop_info(req):
                 ]
             }
         }
-    }
+    }}
 
 def nearby_routes(location):
     api_res = api.nearby_routes(location)
